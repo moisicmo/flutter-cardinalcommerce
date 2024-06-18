@@ -70,55 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             ElevatedButton(
               onPressed: () async {
-                var request = BraintreeDropInRequest(
-                  tokenizationKey: tokenizationKey,
-                  collectDeviceData: true,
-                  vaultManagerEnabled: true,
-                  requestThreeDSecureVerification: true,
-                  email: "test@email.com",
-                  billingAddress: BraintreeBillingAddress(
-                    givenName: "Jill",
-                    surname: "Doe",
-                    phoneNumber: "5551234567",
-                    streetAddress: "555 Smith St",
-                    extendedAddress: "#2",
-                    locality: "Chicago",
-                    region: "IL",
-                    postalCode: "12345",
-                    countryCodeAlpha2: "US",
-                  ),
-                  googlePaymentRequest: BraintreeGooglePaymentRequest(
-                    totalPrice: '4.20',
-                    currencyCode: 'USD',
-                    billingAddressRequired: false,
-                  ),
-                  applePayRequest: BraintreeApplePayRequest(
-                    currencyCode: 'USD',
-                    supportedNetworks: [
-                      ApplePaySupportedNetworks.visa,
-                      ApplePaySupportedNetworks.masterCard,
-                    ],
-                    countryCode: 'US',
-                    merchantIdentifier: '',
-                    displayName: '',
-                    paymentSummaryItems: [],
-                  ),
-                  paypalRequest: BraintreePayPalRequest(
-                    amount: '4.20',
-                    displayName: 'Example company',
-                  ),
-                  cardEnabled: true,
-                );
-                final result = await BraintreeDropIn.start(request);
-                if (result != null) {
-                  showNonce(result.paymentMethodNonce);
-                  sendNonceToServer(result.paymentMethodNonce.nonce);
-                }
-              },
-              child: const Text('LAUNCH NATIVE DROP-IN'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
                 final request = BraintreeCreditCardRequest(
                   cardNumber: '4111111111111111',
                   expirationMonth: '12',

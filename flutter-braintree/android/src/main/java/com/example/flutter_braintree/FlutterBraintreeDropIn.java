@@ -79,77 +79,7 @@ public class FlutterBraintreeDropIn  implements FlutterPlugin, ActivityAware, Me
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {
-    if (call.method.equals("start")) {
-      String clientToken = call.argument("clientToken");
-      String tokenizationKey = call.argument("tokenizationKey");
-      ThreeDSecureRequest threeDSecureRequest = new ThreeDSecureRequest();
-      String token = "";
-      if (clientToken != null)
-        token = clientToken;
-      else if (tokenizationKey != null)
-        token = tokenizationKey;
-
-      // For best results with 3ds 2.0, provide as many additional elements as possible.
-      HashMap<String, String> billingAddress = call.argument("billingAddress");
-      if(billingAddress != null){
-        ThreeDSecurePostalAddress address = new ThreeDSecurePostalAddress();
-        address.setGivenName(billingAddress.get("givenName")); // ASCII-printable characters required, else will throw a validation error
-        address.setSurname(billingAddress.get("surname")); // ASCII-printable characters required, else will throw a validation error
-        address.setPhoneNumber(billingAddress.get("phoneNumber"));
-        address.setStreetAddress(billingAddress.get("streetAddress"));
-        address.setExtendedAddress(billingAddress.get("extendedAddress"));
-        address.setLocality(billingAddress.get("locality"));
-        address.setRegion(billingAddress.get("region"));
-        address.setPostalCode(billingAddress.get("postalCode"));
-        address.setCountryCodeAlpha2(billingAddress.get("countryCodeAlpha2"));
-
-        ThreeDSecureAdditionalInformation additionalInformation = new ThreeDSecureAdditionalInformation();
-        additionalInformation.setShippingAddress(address);
-        threeDSecureRequest.setBillingAddress(address);
-        threeDSecureRequest.setAdditionalInformation(additionalInformation);
-      }
-
-
-
-      threeDSecureRequest.setAmount((String) call.argument("amount"));
-      String email = call.argument("email");
-      if(email != null){
-        threeDSecureRequest.setEmail(email);
-      }
-
-      threeDSecureRequest.setVersionRequested(ThreeDSecureRequest.VERSION_2);
-
-
-      DropInRequest dropInRequest = new DropInRequest();
-
-      dropInRequest.setVaultManagerEnabled((Boolean) call.argument("vaultManagerEnabled"));
-      dropInRequest.setThreeDSecureRequest(threeDSecureRequest);
-      dropInRequest.setMaskCardNumber((Boolean) call.argument("maskCardNumber"));
-
-
-      //.collectDeviceData((Boolean) call.argument("collectDeviceData"))
-      // .requestThreeDSecureVerification((Boolean) call.argument("requestThreeDSecureVerification"))
-
-
-      if (!((Boolean) call.argument("venmoEnabled")))
-        dropInRequest.setVenmoDisabled(true);
-      if (!((Boolean) call.argument("cardEnabled")))
-        dropInRequest.setCardDisabled(true);
-      if (!((Boolean) call.argument("paypalEnabled")))
-        dropInRequest.setPayPalDisabled(true);
-
-      if (this.activeResult != null) {
-        result.error("drop_in_already_running", "Cannot launch another Drop-in activity while one is already running.", null);
-        return;
-      }
-      this.activeResult = result;
-      Intent intent = new Intent(activity, DropInActivity.class);
-      intent.putExtra("token", token);
-      intent.putExtra("dropInRequest", dropInRequest);
-      this.activity.startActivityForResult(intent, DROP_IN_REQUEST_CODE);
-    } else {
       result.notImplemented();
-    }
   }
 
   @Override
