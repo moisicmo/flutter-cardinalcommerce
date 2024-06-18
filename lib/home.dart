@@ -136,38 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: const Text('TOKENIZE CREDIT CARD'),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                final request = BraintreePayPalRequest(
-                  amount: null,
-                  billingAgreementDescription: 'I hereby agree that flutter_braintree is great.',
-                  displayName: 'Your Company',
-                );
-                final result = await Braintree.requestPaypalNonce(
-                  tokenizationKey,
-                  request,
-                );
-                if (result != null) {
-                  showNonce(result);
-                  sendNonceToServer(result.nonce);
-                }
-              },
-              child: const Text('PAYPAL VAULT FLOW'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final request = BraintreePayPalRequest(amount: '13.37');
-                final result = await Braintree.requestPaypalNonce(
-                  tokenizationKey,
-                  request,
-                );
-                if (result != null) {
-                  showNonce(result);
-                  sendNonceToServer(result.nonce);
-                }
-              },
-              child: const Text('PAYPAL CHECKOUT FLOW'),
-            ),
           ],
         ),
       ),

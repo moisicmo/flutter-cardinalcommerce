@@ -37,10 +37,6 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements PayPalL
             String type = intent.getStringExtra("type");
             if (type.equals("tokenizeCreditCard")) {
                 tokenizeCreditCard();
-            } else if (type.equals("requestPaypalNonce")) {
-                payPalClient = new PayPalClient(this, braintreeClient);
-                payPalClient.setListener(this);
-                requestPaypalNonce();
             } else {
                 throw new Exception("Invalid request type: " + type);
             }
@@ -90,22 +86,6 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements PayPalL
             }
         };
         cardClient.tokenize(card, callback);
-    }
-
-    protected void requestPaypalNonce() {
-        Intent intent = getIntent();
-        if (intent.getStringExtra("amount") == null) {
-            // Vault flow
-            PayPalVaultRequest vaultRequest = new PayPalVaultRequest();
-            vaultRequest.setDisplayName(intent.getStringExtra("displayName"));
-            vaultRequest.setBillingAgreementDescription(intent.getStringExtra("billingAgreementDescription"));
-            payPalClient.tokenizePayPalAccount(this, vaultRequest);
-        } else {
-            // Checkout flow
-            PayPalCheckoutRequest checkOutRequest = new PayPalCheckoutRequest(intent.getStringExtra("amount"));
-            checkOutRequest.setCurrencyCode(intent.getStringExtra("currencyCode"));
-            payPalClient.tokenizePayPalAccount(this, checkOutRequest);
-        }
     }
 
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {

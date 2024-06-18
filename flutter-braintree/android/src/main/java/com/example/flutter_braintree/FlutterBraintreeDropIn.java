@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 
 import com.braintreepayments.api.DropInRequest;
 import com.braintreepayments.api.DropInResult;
-import com.braintreepayments.api.GooglePayRequest;
 import com.braintreepayments.api.PayPalCheckoutRequest;
 import com.braintreepayments.api.PaymentMethodNonce;
 import com.braintreepayments.api.ThreeDSecureAdditionalInformation;
@@ -131,8 +130,7 @@ public class FlutterBraintreeDropIn  implements FlutterPlugin, ActivityAware, Me
       //.collectDeviceData((Boolean) call.argument("collectDeviceData"))
       // .requestThreeDSecureVerification((Boolean) call.argument("requestThreeDSecureVerification"))
 
-      readGooglePaymentParameters(dropInRequest, call);
-      readPayPalParameters(dropInRequest, call);
+
       if (!((Boolean) call.argument("venmoEnabled")))
         dropInRequest.setVenmoDisabled(true);
       if (!((Boolean) call.argument("cardEnabled")))
@@ -152,37 +150,6 @@ public class FlutterBraintreeDropIn  implements FlutterPlugin, ActivityAware, Me
     } else {
       result.notImplemented();
     }
-  }
-
-  private static void readGooglePaymentParameters(DropInRequest dropInRequest, MethodCall call) {
-    HashMap<String, Object> arg = call.argument("googlePaymentRequest");
-    if (arg == null) {
-      dropInRequest.setGooglePayDisabled(true);
-      return;
-    }
-    GooglePayRequest googlePayRequest = new GooglePayRequest();
-    googlePayRequest.setTransactionInfo(TransactionInfo.newBuilder()
-            .setTotalPrice((String) arg.get("totalPrice"))
-            .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
-            .setCurrencyCode((String) arg.get("currencyCode"))
-            .build());
-    googlePayRequest.setBillingAddressRequired(true);
-    dropInRequest.setGooglePayRequest(googlePayRequest);
-  }
-
-  private static void readPayPalParameters(DropInRequest dropInRequest, MethodCall call) {
-    HashMap<String, Object> arg = call.argument("paypalRequest");
-    if (arg == null) {
-      dropInRequest.setPayPalDisabled(true);
-      return;
-    }
-    String amount = (String) arg.get("amount");
-    PayPalCheckoutRequest paypalRequest = new PayPalCheckoutRequest(amount);
-    paypalRequest.setCurrencyCode((String) arg.get("currencyCode"));
-    paypalRequest.setDisplayName((String) arg.get("displayName"));
-    paypalRequest.setBillingAgreementDescription((String) arg.get("billingAgreementDescription"));
-
-    dropInRequest.setPayPalRequest(paypalRequest);
   }
 
   @Override

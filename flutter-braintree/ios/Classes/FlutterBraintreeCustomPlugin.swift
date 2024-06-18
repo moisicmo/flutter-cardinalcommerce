@@ -27,53 +27,7 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
         
         let client = BTAPIClient(authorization: authorization)
         
-        if call.method == "requestPaypalNonce" {
-            let driver = BTPayPalDriver(apiClient: client!)
-            
-            guard let requestInfo = dict(for: "request", in: call) else {
-                isHandlingResult = false
-                return
-            }
-            
-            if let amount = requestInfo["amount"] as? String {
-                let paypalRequest = BTPayPalCheckoutRequest(amount: amount)
-                paypalRequest.currencyCode = requestInfo["currencyCode"] as? String
-                paypalRequest.displayName = requestInfo["displayName"] as? String
-                paypalRequest.billingAgreementDescription = requestInfo["billingAgreementDescription"] as? String
-                if let intent = requestInfo["payPalPaymentIntent"] as? String {
-                    switch intent {
-                    case "order":
-                        paypalRequest.intent = BTPayPalRequestIntent.order
-                    case "sale":
-                        paypalRequest.intent = BTPayPalRequestIntent.sale
-                    default:
-                        paypalRequest.intent = BTPayPalRequestIntent.authorize
-                    }
-                }
-                if let userAction = requestInfo["payPalPaymentUserAction"] as? String {
-                    switch userAction {
-                    case "commit":
-                        paypalRequest.userAction = BTPayPalRequestUserAction.commit
-                    default:
-                        paypalRequest.userAction = BTPayPalRequestUserAction.default
-                    }
-                }
-                driver.tokenizePayPalAccount(with: paypalRequest) { (nonce, error) in
-                    self.handleResult(nonce: nonce, error: error, flutterResult: result)
-                    self.isHandlingResult = false
-                }
-            } else {
-                let paypalRequest = BTPayPalVaultRequest()
-                paypalRequest.displayName = requestInfo["displayName"] as? String
-                paypalRequest.billingAgreementDescription = requestInfo["billingAgreementDescription"] as? String
-                
-                driver.tokenizePayPalAccount(with: paypalRequest) { (nonce, error) in
-                    self.handleResult(nonce: nonce, error: error, flutterResult: result)
-                    self.isHandlingResult = false
-                }
-            }
-            
-        } else if call.method == "tokenizeCreditCard" {
+        if call.method == "tokenizeCreditCard" {
             let cardClient = BTCardClient(apiClient: client!)
             
             guard let cardRequestInfo = dict(for: "request", in: call) else {return}

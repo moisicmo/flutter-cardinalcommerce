@@ -3,6 +3,7 @@ package com.example.flutter_braintree;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 
 
@@ -95,19 +96,7 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
       intent.putExtra("expirationYear", (String) request.get("expirationYear"));
       intent.putExtra("cvv", (String) request.get("cvv"));
       intent.putExtra("cardholderName", (String) request.get("cardholderName"));
-      activity.startActivityForResult(intent, CUSTOM_ACTIVITY_REQUEST_CODE);
-    } else if (call.method.equals("requestPaypalNonce")) {
-      Intent intent = new Intent(activity, FlutterBraintreeCustom.class);
-      intent.putExtra("type", "requestPaypalNonce");
-      intent.putExtra("authorization", (String) call.argument("authorization"));
-      assert(call.argument("request") instanceof Map);
-      Map request = (Map) call.argument("request");
-      intent.putExtra("amount", (String) request.get("amount"));
-      intent.putExtra("currencyCode", (String) request.get("currencyCode"));
-      intent.putExtra("displayName", (String) request.get("displayName"));
-      intent.putExtra("payPalPaymentIntent", (String) request.get("payPalPaymentIntent"));
-      intent.putExtra("payPalPaymentUserAction", (String) request.get("payPalPaymentUserAction"));
-      intent.putExtra("billingAgreementDescription", (String) request.get("billingAgreementDescription"));
+
       activity.startActivityForResult(intent, CUSTOM_ACTIVITY_REQUEST_CODE);
     } else {
       result.notImplemented();
@@ -117,6 +106,8 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
 
   @Override
   public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+          // Añadir log antes de iniciar la actividad
+      Log.d("FlutterBraintreePlugin", "Llamando a startActivityForResult");
     if (activeResult == null)
       return false;
     
