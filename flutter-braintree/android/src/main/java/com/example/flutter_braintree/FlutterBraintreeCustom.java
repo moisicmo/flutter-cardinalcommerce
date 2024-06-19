@@ -17,7 +17,6 @@ import com.braintreepayments.api.PayPalVaultRequest;
 import com.braintreepayments.api.PaymentMethodNonce;
 import com.braintreepayments.api.UserCanceledException;
 
-
 import java.util.HashMap;
 
 public class FlutterBraintreeCustom extends AppCompatActivity {
