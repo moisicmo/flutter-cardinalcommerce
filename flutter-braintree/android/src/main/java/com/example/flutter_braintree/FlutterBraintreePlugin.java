@@ -25,60 +25,23 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
   private Activity activity;
   private Result activeResult;
 
-  private FlutterBraintreeDropIn dropIn;
-
-  public static void registerWith(Registrar registrar) {
-    FlutterBraintreeDropIn.registerWith(registrar);
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_braintree.custom");
-    FlutterBraintreePlugin plugin = new FlutterBraintreePlugin();
-    plugin.activity = registrar.activity();
-    registrar.addActivityResultListener(plugin);
-    channel.setMethodCallHandler(plugin);
-  }
-
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
+    Log.d("FlutterBraintreePlugin", "Llamando a onAttachedToEngine");
     final MethodChannel channel = new MethodChannel(binding.getBinaryMessenger(), "flutter_braintree.custom");
     channel.setMethodCallHandler(this);
-
-    dropIn = new FlutterBraintreeDropIn();
-    dropIn.onAttachedToEngine(binding);
-  }
-
-  @Override
-  public void onDetachedFromEngine(FlutterPluginBinding binding) {
-    dropIn.onDetachedFromEngine(binding);
-    dropIn = null;
   }
 
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding) {
+    Log.d("FlutterBraintreePlugin", "Llamando a onAttachedToActivity");
     activity = binding.getActivity();
     binding.addActivityResultListener(this);
-    dropIn.onAttachedToActivity(binding);
-  }
-
-  @Override
-  public void onDetachedFromActivityForConfigChanges() {
-    activity = null;
-    dropIn.onDetachedFromActivity();
-  }
-
-  @Override
-  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
-    activity = binding.getActivity();
-    binding.addActivityResultListener(this);
-    dropIn.onReattachedToActivityForConfigChanges(binding);
-  }
-
-  @Override
-  public void onDetachedFromActivity() {
-    activity = null;
-    dropIn.onDetachedFromActivity();
   }
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {
+    Log.d("FlutterBraintreePlugin", "Llamando a onMethodCall");
     if (activeResult != null) {
       result.error("already_running", "Cannot launch another custom activity while one is already running.", null);
       return;
@@ -106,8 +69,7 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
 
   @Override
   public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-          // Añadir log antes de iniciar la actividad
-      Log.d("FlutterBraintreePlugin", "Llamando a startActivityForResult");
+    Log.d("FlutterBraintreePlugin", "Llamando a onActivityResult");
     if (activeResult == null)
       return false;
     
@@ -133,4 +95,20 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
         return false;
     }
   }
+
+  public static void registerWith(Registrar registrar) {}
+
+  @Override
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {}
+
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {}
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {}
+
+  @Override
+  public void onDetachedFromActivity() {}
+
 }
