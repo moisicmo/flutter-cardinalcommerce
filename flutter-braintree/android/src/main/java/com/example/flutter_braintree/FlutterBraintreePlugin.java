@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-
-
 import java.util.Map;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -96,11 +94,8 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
     }
   }
 
-  public static void registerWith(Registrar registrar) {}
-
   @Override
   public void onDetachedFromEngine(FlutterPluginBinding binding) {}
-
 
   @Override
   public void onDetachedFromActivityForConfigChanges() {}

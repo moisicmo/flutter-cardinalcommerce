@@ -11,10 +11,7 @@ import com.braintreepayments.api.Card;
 import com.braintreepayments.api.CardClient;
 import com.braintreepayments.api.CardNonce;
 import com.braintreepayments.api.CardTokenizeCallback;
-import com.braintreepayments.api.PayPalAccountNonce;
 import com.braintreepayments.api.PayPalCheckoutRequest;
-import com.braintreepayments.api.PayPalClient;
-import com.braintreepayments.api.PayPalListener;
 import com.braintreepayments.api.PayPalRequest;
 import com.braintreepayments.api.PayPalVaultRequest;
 import com.braintreepayments.api.PaymentMethodNonce;
@@ -23,9 +20,8 @@ import com.braintreepayments.api.UserCanceledException;
 
 import java.util.HashMap;
 
-public class FlutterBraintreeCustom extends AppCompatActivity implements PayPalListener {
+public class FlutterBraintreeCustom extends AppCompatActivity {
   private BraintreeClient braintreeClient;
-  private PayPalClient payPalClient;
   private Boolean started = false;
 
   @Override
@@ -90,12 +86,7 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements PayPalL
     HashMap<String, Object> nonceMap = new HashMap<String, Object>();
     nonceMap.put("nonce", paymentMethodNonce.getString());
     nonceMap.put("isDefault", paymentMethodNonce.isDefault());
-    if (paymentMethodNonce instanceof PayPalAccountNonce) {
-      PayPalAccountNonce paypalAccountNonce = (PayPalAccountNonce) paymentMethodNonce;
-      nonceMap.put("paypalPayerId", paypalAccountNonce.getPayerId());
-      nonceMap.put("typeLabel", "PayPal");
-      nonceMap.put("description", paypalAccountNonce.getEmail());
-    }else if(paymentMethodNonce instanceof CardNonce){
+    if (paymentMethodNonce instanceof CardNonce){
       CardNonce cardNonce = (CardNonce) paymentMethodNonce;
       nonceMap.put("typeLabel", cardNonce.getCardType());
       nonceMap.put("description", "ending in ••" + cardNonce.getLastTwo());
@@ -107,16 +98,9 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements PayPalL
     finish();
   }
 
-  public void onCancel() {}
-
   public void onError(Exception error) {}
   
   @Override
   protected void onNewIntent(Intent newIntent) {}
 
-  @Override
-  public void onPayPalSuccess(@NonNull PayPalAccountNonce payPalAccountNonce) {}
-
-  @Override
-  public void onPayPalFailure(@NonNull Exception error) {}
 }
